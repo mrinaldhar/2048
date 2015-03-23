@@ -1,0 +1,270 @@
+<html>
+<head>
+<title>2048 | Mrinal Dhar
+</title>
+<style>
+.row {
+	display: block;
+	width:100%;
+}
+.column {
+	display: inline-block;
+	width:100px;
+	color:white;
+	height:100px;
+	font-size:3em;
+	margin: 5px;
+	padding: 0px;
+	background-color: black;
+	text-align: center;
+	vertical-align: bottom;
+	box-shadow: 4px 4px 2px #8a8a8a;
+}
+body {
+text-align: center;
+padding-top: 100px;	overflow-y: hidden;
+}
+</style>
+</head>
+
+<body>
+<span id="1" class="row">
+	<span id="11" class="column">0
+	</span>
+	<span id="12" class="column">0
+	</span>
+	<span id="13" class="column">0
+	</span>
+	<span id="14" class="column">0
+	</span>
+</span>
+<span id="2" class="row">
+	<span id="21" class="column">0
+	</span>
+	<span id="22" class="column">0
+	</span>
+	<span id="23" class="column">0
+	</span>
+	<span id="24" class="column">0
+	</span>
+</span>
+<span id="3" class="row">
+	<span id="31" class="column">0
+	</span>
+	<span id="32" class="column">0
+	</span>
+	<span id="33" class="column">0
+	</span>
+	<span id="34" class="column">0
+	</span>
+</span>
+<span id="4" class="row">
+	<span id="41" class="column">0
+	</span>
+	<span id="42" class="column">0
+	</span>
+	<span id="43" class="column">0
+	</span>
+	<span id="44" class="column">0
+	</span>
+</span>
+<div id="ins"><pre>
+    Works a bit differently than the usual version.
+
+The different rules :
+
+When you shift a row with two or more adjacent numbers, only the last number is shifted. For example, on moving 2 4 8 0 to right, it becomes 2 4 0 8 and NOT 0 2 4 8 (as in the usual version)
+
+You only get '2' as new additions. (4 does not appear randomly, unlike the usual version)
+
+Upon shifting a row with elements that can be combined, maximum combination takes place. For example, on moving 2 2 4 0 to right, you get 0 0 0 8 and NOT 0 0 4 4 (as in the usual version)</pre>
+</div>
+<script src="js/jquery.js"></script>
+<script>
+var numdone = 0;
+var arena = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+function getnumdone() {
+	numdone=0;
+	for (x=0; x<3; x++)
+	{
+		for(y=0; y<3; y++)
+		{
+			if (arena[x][y]!=0)
+			{
+				numdone += 1;
+			}
+		}
+	}
+}
+var movemade=0;
+function gennew()
+{
+	var x = (Math.floor(Math.random() * 1000))%4 + 1;
+var y = (Math.floor(Math.random() * 1000))%4 + 1;
+// var stringg = "#arena"+ " #"+x + " #" + y;
+// $(stringg).text='2';
+// alert(stringg);
+// var currvalue = $("#"+x+y).text();
+// alert('call');
+numdone = getnumdone();
+if(numdone==16)
+{
+gameover();
+}
+else {
+if (arena[x-1][y-1]==0) {
+$("#"+x+y).text('2');
+arena[x-1][y-1]=2;
+}
+else {
+	gennew();
+}
+}
+}
+gennew();
+function gameover() {
+	alert('Game over. ');
+}
+$(document).keyup(function(e) {
+    if (e.which == 37) 
+    	{
+    		movemade=0;
+    		for (x=0; x<4;x++)
+    		{
+    			for (y=3; y>0; y--)
+    			{
+    				if (arena[x][y]==arena[x][y-1])
+    				{
+    					arena[x][y-1]=2*arena[x][y-1];
+    					arena[x][y]=0;
+    					movemade+=1;
+    				}
+    				else if (arena[x][y-1]==0)
+    				{
+    					arena[x][y-1]=arena[x][y];
+    					if (arena[x][y]!=0)
+    					{
+    					movemade+=1;
+    					}
+    					arena[x][y]=0;
+    				}
+    			}
+    		}
+    		if (movemade!=0)
+    		{
+    		updatevals();
+    		gennew();
+    	}
+		// alert('left');
+		}
+	    if (e.which == 38) 
+    	{
+    		movemade=0;
+		// alert('up');
+		for (y=0; y<4;y++)
+    		{
+    			for (x=3; x>0; x--)
+    			{
+    				if (arena[x][y]==arena[x-1][y])
+    				{
+    					arena[x-1][y]=2*arena[x-1][y];
+    					arena[x][y]=0;
+    					movemade+=1;
+    				}
+    				else if (arena[x-1][y]==0)
+    				{
+    					arena[x-1][y]=arena[x][y];
+    					if (arena[x][y]!=0)
+    					{
+    					movemade+=1;
+    					}
+    					arena[x][y]=0;
+    				}
+    			}
+    		}
+
+    		if (movemade!=0)
+    		{
+    		updatevals();
+		gennew();
+	}
+		}
+		    if (e.which == 39) 
+    	{
+    		movemade=0;
+		// alert('right');
+		for (x=0; x<4;x++)
+    		{
+    			for (y=0; y<3; y++)
+    			{
+    				if (arena[x][y]==arena[x][y+1])
+    				{
+    					arena[x][y+1]=2*arena[x][y+1];
+    					arena[x][y]=0;
+    					movemade+=1;
+    				}
+    				else if (arena[x][y+1]==0)
+    				{
+    					arena[x][y+1]=arena[x][y];
+    					if (arena[x][y]!=0)
+    					{
+    					movemade+=1;
+    					}
+    					arena[x][y]=0;
+    				}
+    			}
+    		}
+    		if (movemade!=0)
+    		{
+    		updatevals();
+		gennew();
+	}
+		}
+		    if (e.which == 40) 
+    	{
+		// alert('down');
+		movemade=0;
+		for (y=0; y<4;y++)
+    		{
+    			for (x=0; x<3; x++)
+    			{
+    				if (arena[x][y]==arena[x+1][y])
+    				{
+    					arena[x+1][y]=2*arena[x+1][y];
+    					arena[x][y]=0;
+    					movemade+=1;
+    				}
+    				else if (arena[x+1][y]==0)
+    				{
+    					arena[x+1][y]=arena[x][y];
+    					if (arena[x][y]!=0)
+    					{
+    					movemade+=1;
+    					}
+    					arena[x][y]=0;
+    				}
+    			}
+    		}
+
+    		if (movemade!=0)
+    		{
+    		updatevals();
+		gennew();
+	}
+		}
+});
+function updatevals() {
+	for (x=1; x<5; x++)
+	{
+		for (y=1; y<5; y++)
+		{
+			$("#"+x+y).text(arena[x-1][y-1]);
+
+		}
+	}
+}
+</script>
+
+
+</body>
+</html>
